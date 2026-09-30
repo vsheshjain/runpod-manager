@@ -1,0 +1,11 @@
+# Never commit secrets. Real tokens live in .env (from .env.example) or in
+# ~/.runpod/config.toml — see SYSTEM_PROMPT.md §2.
+.env
+.env.*
+!.env.example
+*.env
+!*.env.example
+*.pem
+*.key
+
+.DS_Store

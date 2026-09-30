@@ -1,0 +1,23 @@
+#!/usr/bin/env bash
+# Run runpodctl with RUNPOD_API_KEY loaded from this repo's .env.
+# Usage: bin/rp <resource> <action> [flags]   e.g. bin/rp pod list
+set -euo pipefail
+
+root="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
+
+if ! command -v runpodctl >/dev/null 2>&1; then
+  echo '{"error":"runpodctl not installed: brew install runpod/runpodctl/runpodctl","code":"cli_error"}' >&2
+  exit 1
+fi
+
+if [[ -f "$root/.env" ]]; then
+  set -a
+  # shellcheck disable=SC1091
+  source "$root/.env"
+  set +a
+fi
+
+# Fall back to ~/.runpod/config.toml when .env has no key.
+[[ -z "${RUNPOD_API_KEY:-}" ]] && unset RUNPOD_API_KEY
+
+exec runpodctl "$@"
