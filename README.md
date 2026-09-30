@@ -29,9 +29,19 @@ runpodctl version
 
 ### 2. Create a RunPod API key
 
-1. Open https://console.runpod.io → **Settings → API Keys → Create API Key**.
-2. Name it (e.g. `runpod-manager-agent`).
-3. Copy it — it is shown only once.
+Per the [RunPod docs](https://docs.runpod.io/get-started/credentials#create-an-api-key):
+
+1. In the RunPod console, open the [Credentials page](https://console.runpod.io/user/credentials).
+2. Select the **API Keys** tab and click **Create API Key**.
+3. Give the key a name (e.g. `runpod-manager-agent`) and set its permissions:
+   - **All** — full access. Pick this so the manager can create, stop and delete resources.
+   - **Restricted** — choose access per API endpoint (None / Read Only / Read/Write).
+   - **Read Only** — the manager can inspect but not change anything.
+4. Click **Create**, then click the new key to copy it.
+
+RunPod does not store the key, so save it somewhere secure (e.g. a password
+manager) as well as in `.env`. To edit permissions, disable, or revoke it later:
+**Credentials → API Keys** → pencil icon, toggle, or trash icon → **Revoke Key**.
 
 ### 3. Add the key to `.env`
 

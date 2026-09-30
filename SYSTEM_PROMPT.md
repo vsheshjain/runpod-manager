@@ -34,8 +34,13 @@ runpodctl version
 
 ### The API key — the only thing the user provides
 
-The user gives one thing: a RunPod API key (console → **Settings → API Keys →
-Create API Key**). It is stored in `.env` in this repo (gitignored):
+The user gives one thing: a RunPod API key, created on the console's
+[Credentials page](https://console.runpod.io/user/credentials) → **API Keys**
+tab → **Create API Key** (docs:
+https://docs.runpod.io/get-started/credentials#create-an-api-key). Permission
+**All** is needed for full management; **Read Only** makes every mutation fail
+with `unauthorized`/`forbidden`; **Restricted** is set per API endpoint. It is
+stored in `.env` in this repo (gitignored):
 
 ```bash
 cp .env.example .env      # then paste the key into RUNPOD_API_KEY=
@@ -60,7 +65,8 @@ Rules:
   for them and tell them it is now in the transcript — suggest rotating it.
 - `code: no_credentials` means `.env` is missing/empty and no
   `~/.runpod/config.toml` exists.
-- If a key leaks: revoke in Settings → API Keys, create a new one, update `.env`.
+- If a key leaks: Credentials → API Keys → trash icon → **Revoke Key**, create a
+  new one, update `.env`.
 
 ---
 
@@ -255,7 +261,8 @@ without telling the user it's billing.
 | Symptom | Cause |
 |---|---|
 | `no_credentials` | called `runpodctl` directly instead of `bin/rp`, or `.env` empty |
-| `unauthorized` on everything | key revoked/typo; restricted key lacks scope |
+| `unauthorized` on everything | key revoked, disabled (toggle on Credentials → API Keys), or typo |
+| `unauthorized`/`forbidden` only on changes | key is Read Only or Restricted — edit permissions (pencil icon) |
 | Pod `RUNNING` but nothing works | read `runtimeStatus`; likely still `initializing` (image pull) |
 | Pod stuck `initializing` | `pod logs --source system` — image pull failure, bad image tag, private registry without creds |
 | `stopped_by_runpod` | out of credit (check billing), fatal image pull, or host issue |
