@@ -153,6 +153,17 @@ When `desiredStatus` and `runtimeStatus` disagree, **trust `runtimeStatus`**.
 
 ### SSH
 
+The private key's **path** is `RUNPOD_SSH_KEY` in `.env` (default
+`~/.ssh/runpod`). Never put key contents in `.env`, memory, or chat. Its public
+half must be on the account — check `bin/rp ssh list-keys`; if missing,
+`bin/rp ssh add-key --key-file "$RUNPOD_SSH_KEY.pub"`. Keys added after a pod
+was created don't reach that pod.
+
+```bash
+bin/rp ssh info <pod-id>                       # ssh command for the pod
+ssh -i "$RUNPOD_SSH_KEY" <user>@<host> -p <port>
+```
+
 Wait for `ssh.ssh_command` in `pod get`. If `ssh.error` says the pod never
 asked for `22/tcp`, it hands back a `pod update --ports` command.
 **`--ports` replaces the whole port list** (unlike `--env`, which merges) and

@@ -54,7 +54,33 @@ cp .env.example .env
 
 `.env` is gitignored. Don't paste the key into chat or commit it.
 
-### 4. Verify
+### 4. SSH key for pods (optional)
+
+`.env` holds the **path** to your private key, not the key itself:
+
+```bash
+RUNPOD_SSH_KEY=$HOME/.ssh/runpod
+```
+
+No key yet? `ssh-keygen -t ed25519 -f ~/.ssh/runpod -C runpod`. Register the
+public half with your account once (needs the API key from step 3):
+
+```bash
+set -a; source .env; set +a
+bin/rp ssh add-key --key-file "$RUNPOD_SSH_KEY.pub"
+bin/rp ssh list-keys
+```
+
+Then connect to a pod:
+
+```bash
+bin/rp ssh info <pod-id>
+ssh -i "$RUNPOD_SSH_KEY" <user>@<host> -p <port>
+```
+
+The key only reaches pods created after it was added.
+
+### 5. Verify
 
 ```bash
 bin/rp doctor
@@ -65,7 +91,7 @@ A JSON list (possibly `[]`) means it works. `"code":"no_credentials"` means
 `.env` wasn't picked up; `"code":"unauthorized"` means the key is wrong or
 revoked.
 
-### 5. Start the manager
+### 6. Start the manager
 
 ```bash
 claude        # from inside the repo
